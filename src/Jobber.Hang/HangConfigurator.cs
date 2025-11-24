@@ -2,6 +2,7 @@
 using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Jobber.Hang;
 
@@ -9,24 +10,23 @@ public static class HangConfigurator
 {
     public static void AddHang(WebApplicationBuilder builder)
     {
-        builder.Services.AddHangfire(configuration =>
-        {
-            var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+        var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 
-            configuration
-                .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-                .UseSimpleAssemblyNameTypeSerializer()
-                .UseRecommendedSerializerSettings()
-                .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(cs));
-        });
+        builder.Services.AddHangfire(conf => conf
+            .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            .UseSimpleAssemblyNameTypeSerializer()
+            .UseRecommendedSerializerSettings()
+            .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(cs)));
 
         builder.Services.AddHangfireServer();
 
-        RecurringJob.AddOrUpdate<HangWorker>("HangWorker", w => w.Run(), Cron.Minutely);
     }
 
     public static void UseHang(WebApplication app)
     {
         app.MapHangfireDashboard();
+
+        var manager = app.Services.GetRequiredService<IRecurringJobManager>();
+        manager.AddOrUpdate<HangWorker>("HangWorker", w => w.Run(), Cron.Minutely);
     }
 }
