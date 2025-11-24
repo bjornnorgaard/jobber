@@ -21,6 +21,8 @@ public static class HangConfigurator
         });
 
         builder.Services.AddHangfireServer();
+
+        RecurringJob.AddOrUpdate<HangWorker>("HangWorker", w => w.Run(), Cron.Minutely);
     }
 
     public static void UseHang(WebApplication app)
