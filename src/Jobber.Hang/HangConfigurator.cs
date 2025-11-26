@@ -19,7 +19,6 @@ public static class HangConfigurator
             .UsePostgreSqlStorage(o => o.UseNpgsqlConnection(cs)));
 
         builder.Services.AddHangfireServer();
-
     }
 
     public static void UseHang(WebApplication app)
