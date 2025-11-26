@@ -11,7 +11,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Jobber.Hang\Jobber.Hang.csproj" />
+        <ProjectReference Include="..\Jobber.Hang\Jobber.Hang.csproj"/>
+        <ProjectReference Include="..\Jobber.Tick\Jobber.Tick.csproj"/>
     </ItemGroup>
 
 </Project>

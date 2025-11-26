@@ -6,4 +6,11 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0"/>
+        <PackageReference Include="TickerQ" Version="10.0.0"/>
+        <PackageReference Include="TickerQ.Dashboard" Version="10.0.0"/>
+        <PackageReference Include="TickerQ.EntityFrameworkCore" Version="10.0.0"/>
+    </ItemGroup>
+
 </Project>
