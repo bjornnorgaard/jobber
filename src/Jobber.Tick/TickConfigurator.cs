@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using TickerQ.Dashboard.DependencyInjection;
 using TickerQ.DependencyInjection;
 using TickerQ.EntityFrameworkCore.DbContextFactory;
@@ -20,10 +21,7 @@ public static class TickConfigurator
             tickerOptions.AddOperationalStore(storeOptions =>
             {
                 storeOptions.SetDbContextPoolSize(34);
-                storeOptions.UseTickerQDbContext<TickerQDbContext>(contextOptions =>
-                {
-                    contextOptions.UseNpgsql(cs);
-                });
+                storeOptions.UseTickerQDbContext<TickerQDbContext>(contextOptions => { contextOptions.UseNpgsql(cs); });
             });
         });
     }
@@ -31,5 +29,8 @@ public static class TickConfigurator
     public static void UseTick(WebApplication app)
     {
         app.UseTickerQ();
+
+        var context = app.Services.GetRequiredService<TickerQDbContext>();
+        context.Database.Migrate(); // Apply pending migrations.
     }
 }
